@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2026 MrSluffy
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<resources>
+    <declare-styleable name="BlurView">
+        <attr name="blurRadius" format="dimension" />
+        <attr name="blurTintColor" format="color" />
+        <attr name="blurTintAlpha" format="float" />
+        <attr name="blurSaturation" format="float" />
+        <attr name="blurBrightness" format="float" />
+        <attr name="blurCornerRadius" format="dimension" />
+        <attr name="blurDownsample" format="integer" />
+        <attr name="blurAlgorithm" format="enum">
+            <enum name="auto" value="0" />
+            <enum name="gaussian" value="1" />
+            <enum name="dualKawase" value="2" />
+            <enum name="box" value="3" />
+        </attr>
+        <attr name="blurQuality" format="enum">
+            <enum name="low" value="0" />
+            <enum name="balanced" value="1" />
+            <enum name="high" value="2" />
+            <enum name="ultra" value="3" />
+        </attr>
+    </declare-styleable>
+</resources>

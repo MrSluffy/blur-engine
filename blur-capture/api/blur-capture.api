@@ -1,0 +1,35 @@
+public final class dev/blurengine/mrsluffy/capture/CaptureGeometry {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/capture/CaptureGeometry;
+	public final fun bitmapSize (II)I
+	public final fun padding (III)I
+	public final fun translation (II)F
+}
+
+public final class dev/blurengine/mrsluffy/capture/CaptureGuard {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/capture/CaptureGuard;
+	public final fun isCapturing ()Z
+	public final fun shouldSkip (Landroid/graphics/Canvas;)Z
+	public final fun shouldSkip (Landroid/graphics/Canvas;Ljava/lang/Object;)Z
+}
+
+public final class dev/blurengine/mrsluffy/capture/ReusableBitmap {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/capture/ReusableBitmap;
+	public final fun fit (Landroid/graphics/Bitmap;II)Landroid/graphics/Bitmap;
+}
+
+public final class dev/blurengine/mrsluffy/capture/ViewCapture {
+	public fun <init> ()V
+	public final fun capture (Landroid/view/View;IIIIIILjava/lang/Object;)Landroid/graphics/Bitmap;
+	public final fun capture (Landroid/view/View;Landroid/view/View;IILjava/lang/Object;)Landroid/graphics/Bitmap;
+	public static synthetic fun capture$default (Ldev/blurengine/mrsluffy/capture/ViewCapture;Landroid/view/View;IIIIIILjava/lang/Object;ILjava/lang/Object;)Landroid/graphics/Bitmap;
+	public static synthetic fun capture$default (Ldev/blurengine/mrsluffy/capture/ViewCapture;Landroid/view/View;Landroid/view/View;IILjava/lang/Object;ILjava/lang/Object;)Landroid/graphics/Bitmap;
+	public final fun getBitmap ()Landroid/graphics/Bitmap;
+	public final fun getLastFailure ()Ljava/lang/Throwable;
+	public final fun getRegionHeight ()I
+	public final fun getRegionLeft ()I
+	public final fun getRegionTop ()I
+	public final fun getRegionWidth ()I
+	public final fun getSurfacesBelow ()Ljava/util/List;
+	public final fun release ()V
+}
+

@@ -1,0 +1,89 @@
+public final class dev/blurengine/mrsluffy/view/BlurSurfaceRenderer : android/view/ViewTreeObserver$OnPreDrawListener {
+	public static final field Companion Ldev/blurengine/mrsluffy/view/BlurSurfaceRenderer$Companion;
+	public static final field PATH_RENDER_EFFECT Ljava/lang/String;
+	public fun <init> (Landroid/view/View;Ldev/blurengine/mrsluffy/view/BlurTarget;)V
+	public final fun attach ()V
+	public final fun detach ()V
+	public final fun draw (Landroid/graphics/Canvas;)V
+	public final fun getActivePath ()Ljava/lang/String;
+	public final fun getConfig ()Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public final fun getLastUpdateMillis ()F
+	public final fun getSkippedCapture ()Z
+	public final fun getSource ()Landroid/view/View;
+	public final fun isAttached ()Z
+	public fun onPreDraw ()Z
+	public final fun setConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public final fun setSource (Landroid/view/View;)V
+	public final fun update ()V
+}
+
+public final class dev/blurengine/mrsluffy/view/BlurSurfaceRenderer$Companion {
+}
+
+public abstract interface class dev/blurengine/mrsluffy/view/BlurTarget {
+	public abstract fun getTargetHeight ()I
+	public abstract fun getTargetLocationInWindow ([I)V
+	public abstract fun getTargetWidth ()I
+	public abstract fun invalidateTarget ()V
+	public abstract fun isTargetShown ()Z
+}
+
+public class dev/blurengine/mrsluffy/view/BlurView : android/widget/FrameLayout {
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
+	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Landroid/content/Context;Lkotlin/jvm/functions/Function1;)V
+	public final fun animateBlur (Lkotlin/jvm/functions/Function1;)V
+	public final fun cancelBlurAnimation ()V
+	public fun draw (Landroid/graphics/Canvas;)V
+	public final fun getActiveRenderer ()Ljava/lang/String;
+	public final fun getAlgorithm ()Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public final fun getBlurRadius ()F
+	public final fun getBrightness ()F
+	public final fun getConfig ()Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public final fun getCornerRadius ()F
+	public final fun getDisplayedConfig ()Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public final fun getDownsample ()I
+	public final fun getGlass ()Ldev/blurengine/mrsluffy/core/GlassStyle;
+	public final fun getGradient ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getLastUpdateMillis ()F
+	public final fun getQuality ()Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun getRespectsAnimationScale ()Z
+	public final fun getSaturation ()F
+	public final fun getSourceView ()Landroid/view/View;
+	public final fun getTintAlpha ()F
+	public final fun getTintColor ()I
+	public final fun hide ()V
+	public final fun hide (J)V
+	public final fun hide (JLdev/blurengine/mrsluffy/animation/BlurAnimationListener;)V
+	public static synthetic fun hide$default (Ldev/blurengine/mrsluffy/view/BlurView;JLdev/blurengine/mrsluffy/animation/BlurAnimationListener;ILjava/lang/Object;)V
+	public final fun invalidateBlur ()V
+	public final fun isAnimating ()Z
+	protected fun onAttachedToWindow ()V
+	protected fun onDetachedFromWindow ()V
+	protected fun onDraw (Landroid/graphics/Canvas;)V
+	protected fun onSizeChanged (IIII)V
+	public final fun setAlgorithm (Ldev/blurengine/mrsluffy/core/BlurAlgorithm;)V
+	public final fun setBlurProgress (F)V
+	public final fun setBlurRadius (F)V
+	public final fun setBrightness (F)V
+	public final fun setConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public final fun setCornerRadius (F)V
+	public final fun setDownsample (I)V
+	public final fun setGlass (Ldev/blurengine/mrsluffy/core/GlassStyle;)V
+	public final fun setGradient (Ldev/blurengine/mrsluffy/core/BlurGradient;)V
+	public final fun setQuality (Ldev/blurengine/mrsluffy/core/BlurQuality;)V
+	public final fun setRespectsAnimationScale (Z)V
+	public final fun setSaturation (F)V
+	public final fun setSourceView (Landroid/view/View;)V
+	public final fun setTint (IF)V
+	public final fun setTintAlpha (F)V
+	public final fun setTintColor (I)V
+	public final fun show ()V
+	public final fun show (J)V
+	public final fun show (JF)V
+	public final fun show (JFLdev/blurengine/mrsluffy/animation/BlurAnimationListener;)V
+	public static synthetic fun show$default (Ldev/blurengine/mrsluffy/view/BlurView;JFLdev/blurengine/mrsluffy/animation/BlurAnimationListener;ILjava/lang/Object;)V
+}
+

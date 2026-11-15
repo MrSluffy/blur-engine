@@ -1,0 +1,285 @@
+public final class dev/blurengine/mrsluffy/core/BlurAlgorithm : java/lang/Enum {
+	public static final field AUTO Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public static final field BOX Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public static final field DUAL_KAWASE Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public static final field GAUSSIAN Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public static fun values ()[Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/BlurBackend {
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun initialize (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public abstract fun release ()V
+	public abstract fun render (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)V
+	public abstract fun supports (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)Z
+	public abstract fun updateConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurBackendException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/BlurBackendFactory {
+	public abstract fun create ()Ldev/blurengine/mrsluffy/core/BlurBackend;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun isSupported (Ldev/blurengine/mrsluffy/core/BlurConfig;Ldev/blurengine/mrsluffy/core/DeviceCapabilities;)Z
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurConfig {
+	public fun <init> ()V
+	public fun <init> (FLdev/blurengine/mrsluffy/core/BlurAlgorithm;Ldev/blurengine/mrsluffy/core/BlurQuality;IIFFFFLdev/blurengine/mrsluffy/core/BlurGradient;Ldev/blurengine/mrsluffy/core/GlassStyle;)V
+	public synthetic fun <init> (FLdev/blurengine/mrsluffy/core/BlurAlgorithm;Ldev/blurengine/mrsluffy/core/BlurQuality;IIFFFFLdev/blurengine/mrsluffy/core/BlurGradient;Ldev/blurengine/mrsluffy/core/GlassStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component10 ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun component11 ()Ldev/blurengine/mrsluffy/core/GlassStyle;
+	public final fun component2 ()Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public final fun component3 ()Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()F
+	public final fun component7 ()F
+	public final fun component8 ()F
+	public final fun component9 ()F
+	public final fun copy (FLdev/blurengine/mrsluffy/core/BlurAlgorithm;Ldev/blurengine/mrsluffy/core/BlurQuality;IIFFFFLdev/blurengine/mrsluffy/core/BlurGradient;Ldev/blurengine/mrsluffy/core/GlassStyle;)Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/core/BlurConfig;FLdev/blurengine/mrsluffy/core/BlurAlgorithm;Ldev/blurengine/mrsluffy/core/BlurQuality;IIFFFFLdev/blurengine/mrsluffy/core/BlurGradient;Ldev/blurengine/mrsluffy/core/GlassStyle;ILjava/lang/Object;)Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlgorithm ()Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public final fun getBrightness ()F
+	public final fun getCornerRadius ()F
+	public final fun getDownsample ()I
+	public final fun getEffectiveRadius ()F
+	public final fun getGlass ()Ldev/blurengine/mrsluffy/core/GlassStyle;
+	public final fun getGradient ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getQuality ()Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun getRadius ()F
+	public final fun getSaturation ()F
+	public final fun getTintAlpha ()F
+	public final fun getTintColor ()I
+	public fun hashCode ()I
+	public final fun resolvedAlgorithm ()Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurConfigBuilder {
+	public final fun getAlgorithm ()Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public final fun getBrightness ()F
+	public final fun getCornerRadius ()F
+	public final fun getDownsample ()I
+	public final fun getGlass ()Ldev/blurengine/mrsluffy/core/GlassStyle;
+	public final fun getGradient ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getQuality ()Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun getRadius ()F
+	public final fun getSaturation ()F
+	public final fun getTintAlpha ()F
+	public final fun getTintColor ()I
+	public final fun overlay (Lkotlin/jvm/functions/Function1;)V
+	public final fun performance (Lkotlin/jvm/functions/Function1;)V
+	public final fun setAlgorithm (Ldev/blurengine/mrsluffy/core/BlurAlgorithm;)V
+	public final fun setBrightness (F)V
+	public final fun setCornerRadius (F)V
+	public final fun setDownsample (I)V
+	public final fun setGlass (Ldev/blurengine/mrsluffy/core/GlassStyle;)V
+	public final fun setGradient (Ldev/blurengine/mrsluffy/core/BlurGradient;)V
+	public final fun setQuality (Ldev/blurengine/mrsluffy/core/BlurQuality;)V
+	public final fun setRadius (F)V
+	public final fun setSaturation (F)V
+	public final fun setTintAlpha (F)V
+	public final fun setTintColor (I)V
+	public final fun shape (Lkotlin/jvm/functions/Function1;)V
+	public final fun tint (IF)V
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurConfigKt {
+	public static final fun blurConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;Lkotlin/jvm/functions/Function1;)Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public static synthetic fun blurConfig$default (Ldev/blurengine/mrsluffy/core/BlurConfig;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ldev/blurengine/mrsluffy/core/BlurConfig;
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurGradient {
+	public static final field Companion Ldev/blurengine/mrsluffy/core/BlurGradient$Companion;
+	public fun <init> ()V
+	public fun <init> (FFFFFF)V
+	public synthetic fun <init> (FFFFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun component3 ()F
+	public final fun component4 ()F
+	public final fun component5 ()F
+	public final fun component6 ()F
+	public final fun copy (FFFFFF)Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/core/BlurGradient;FFFFFFILjava/lang/Object;)Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEndIntensity ()F
+	public final fun getEndX ()F
+	public final fun getEndY ()F
+	public final fun getStartIntensity ()F
+	public final fun getStartX ()F
+	public final fun getStartY ()F
+	public fun hashCode ()I
+	public final fun intensityAt (F)F
+	public final fun isInvisible ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurGradient$Companion {
+	public final fun getBottomToTop ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getLeftToRight ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getRightToLeft ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getTopToBottom ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/BlurInput {
+	public abstract fun getHeight ()I
+	public abstract fun getWidth ()I
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurMath {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/core/BlurMath;
+	public final fun requireSameSize (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)V
+	public final fun sigmaForRadius (F)F
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/BlurOutput {
+	public abstract fun getHeight ()I
+	public abstract fun getWidth ()I
+}
+
+public final class dev/blurengine/mrsluffy/core/BlurQuality : java/lang/Enum {
+	public static final field BALANCED Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public static final field HIGH Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public static final field LOW Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public static final field ULTRA Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun getBoxPasses ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getGaussianSigmaSpan ()F
+	public final fun getKawaseMaxIterations ()I
+	public static fun valueOf (Ljava/lang/String;)Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public static fun values ()[Ldev/blurengine/mrsluffy/core/BlurQuality;
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/BlurRenderScheduler {
+	public abstract fun invalidate ()V
+	public abstract fun pause ()V
+	public abstract fun release ()V
+	public abstract fun requestFrame ()V
+	public abstract fun resume ()V
+	public abstract fun setContinuous (Z)V
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/BlurSource {
+	public abstract fun addInvalidationListener (Lkotlin/jvm/functions/Function0;)Ljava/lang/AutoCloseable;
+	public abstract fun capture (Ldev/blurengine/mrsluffy/core/PixelBuffer;)Z
+	public abstract fun size ()Lkotlin/Pair;
+}
+
+public final class dev/blurengine/mrsluffy/core/DeviceCapabilities {
+	public fun <init> (IZZZ)V
+	public synthetic fun <init> (IZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun copy (IZZZ)Ldev/blurengine/mrsluffy/core/DeviceCapabilities;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/core/DeviceCapabilities;IZZZILjava/lang/Object;)Ldev/blurengine/mrsluffy/core/DeviceCapabilities;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHardwareAccelerated ()Z
+	public final fun getSdkInt ()I
+	public final fun getSupportsGles ()Z
+	public final fun getSupportsRenderEffect ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/FrameCallback {
+	public abstract fun doFrame (J)V
+}
+
+public abstract interface class dev/blurengine/mrsluffy/core/FrameClock {
+	public abstract fun cancel ()V
+	public abstract fun postFrame (Ldev/blurengine/mrsluffy/core/FrameCallback;)V
+}
+
+public final class dev/blurengine/mrsluffy/core/FrameDrivenScheduler : dev/blurengine/mrsluffy/core/BlurRenderScheduler {
+	public fun <init> (Ldev/blurengine/mrsluffy/core/FrameClock;Lkotlin/jvm/functions/Function0;)V
+	public fun invalidate ()V
+	public fun pause ()V
+	public fun release ()V
+	public fun requestFrame ()V
+	public fun resume ()V
+	public fun setContinuous (Z)V
+}
+
+public final class dev/blurengine/mrsluffy/core/GlassStyle {
+	public fun <init> ()V
+	public fun <init> (FFFFFF)V
+	public synthetic fun <init> (FFFFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun component3 ()F
+	public final fun component4 ()F
+	public final fun component5 ()F
+	public final fun component6 ()F
+	public final fun copy (FFFFFF)Ldev/blurengine/mrsluffy/core/GlassStyle;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/core/GlassStyle;FFFFFFILjava/lang/Object;)Ldev/blurengine/mrsluffy/core/GlassStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDispersion ()F
+	public final fun getEdgeWidth ()F
+	public final fun getGloss ()F
+	public final fun getHighlight ()F
+	public final fun getLightAngle ()F
+	public final fun getRefraction ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/core/OverlayScope {
+	public final fun getAlpha ()F
+	public final fun getColor ()I
+	public final fun setAlpha (F)V
+	public final fun setColor (I)V
+}
+
+public final class dev/blurengine/mrsluffy/core/PerformanceScope {
+	public final fun getDownsample ()I
+	public final fun getQuality ()Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun setDownsample (I)V
+	public final fun setQuality (Ldev/blurengine/mrsluffy/core/BlurQuality;)V
+}
+
+public final class dev/blurengine/mrsluffy/core/PixelBuffer {
+	public static final field Companion Ldev/blurengine/mrsluffy/core/PixelBuffer$Companion;
+	public fun <init> (II)V
+	public final fun copyFrom (Ldev/blurengine/mrsluffy/core/PixelBuffer;)V
+	public final fun getHeight ()I
+	public final fun getPixels ()[I
+	public final fun getWidth ()I
+	public final fun resize (II)V
+}
+
+public final class dev/blurengine/mrsluffy/core/PixelBuffer$Companion {
+}
+
+public final class dev/blurengine/mrsluffy/core/PixelBufferImage : dev/blurengine/mrsluffy/core/BlurInput, dev/blurengine/mrsluffy/core/BlurOutput {
+	public fun <init> (Ldev/blurengine/mrsluffy/core/PixelBuffer;)V
+	public final fun getBuffer ()Ldev/blurengine/mrsluffy/core/PixelBuffer;
+	public fun getHeight ()I
+	public fun getWidth ()I
+}
+
+public final class dev/blurengine/mrsluffy/core/PixelBufferPool {
+	public fun <init> ()V
+	public fun <init> (J)V
+	public synthetic fun <init> (JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun acquire (II)Ldev/blurengine/mrsluffy/core/PixelBuffer;
+	public final fun clear ()V
+	public final fun getRetainedByteCount ()J
+	public final fun release (Ldev/blurengine/mrsluffy/core/PixelBuffer;)V
+}
+
+public final class dev/blurengine/mrsluffy/core/ShapeScope {
+	public final fun getCornerRadius ()F
+	public final fun setCornerRadius (F)V
+}
+

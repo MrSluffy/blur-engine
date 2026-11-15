@@ -1,0 +1,35 @@
+public final class dev/blurengine/mrsluffy/compose/BlurSurfaceKt {
+	public static final fun BlurContainer (Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun blurSurface (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;
+}
+
+public final class dev/blurengine/mrsluffy/compose/BlurSurfaceScope {
+	public static final field $stable I
+	public final fun cornerRadius-0680j_4 (F)V
+	public final fun getAlgorithm ()Ldev/blurengine/mrsluffy/core/BlurAlgorithm;
+	public final fun getBrightness ()F
+	public final fun getDownsample ()I
+	public final fun getGradient ()Ldev/blurengine/mrsluffy/core/BlurGradient;
+	public final fun getProgress ()F
+	public final fun getQuality ()Ldev/blurengine/mrsluffy/core/BlurQuality;
+	public final fun getRadius-D9Ej5fM ()F
+	public final fun getSaturation ()F
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getSource ()Landroid/view/View;
+	public final fun getTint-0d7_KjU ()J
+	public final fun glass-if577FI (FFFFFF)V
+	public static synthetic fun glass-if577FI$default (Ldev/blurengine/mrsluffy/compose/BlurSurfaceScope;FFFFFFILjava/lang/Object;)V
+	public final fun setAlgorithm (Ldev/blurengine/mrsluffy/core/BlurAlgorithm;)V
+	public final fun setBrightness (F)V
+	public final fun setDownsample (I)V
+	public final fun setGradient (Ldev/blurengine/mrsluffy/core/BlurGradient;)V
+	public final fun setProgress (F)V
+	public final fun setQuality (Ldev/blurengine/mrsluffy/core/BlurQuality;)V
+	public final fun setRadius-0680j_4 (F)V
+	public final fun setSaturation (F)V
+	public final fun setShape (Landroidx/compose/ui/graphics/Shape;)V
+	public final fun setSource (Landroid/view/View;)V
+	public final fun setTint-8_81llA (J)V
+	public final fun tint-8_81llA (J)V
+}
+

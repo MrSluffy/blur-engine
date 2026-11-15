@@ -1,0 +1,91 @@
+public final class dev/blurengine/mrsluffy/platform/BitmapImage : dev/blurengine/mrsluffy/core/BlurInput, dev/blurengine/mrsluffy/core/BlurOutput {
+	public fun <init> (Landroid/graphics/Bitmap;)V
+	public final fun getBitmap ()Landroid/graphics/Bitmap;
+	public fun getHeight ()I
+	public fun getWidth ()I
+}
+
+public final class dev/blurengine/mrsluffy/platform/BitmapPixels {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/platform/BitmapPixels;
+	public final fun read (Landroid/graphics/Bitmap;Ldev/blurengine/mrsluffy/core/PixelBuffer;)V
+	public final fun write (Ldev/blurengine/mrsluffy/core/PixelBuffer;Landroid/graphics/Bitmap;)V
+}
+
+public final class dev/blurengine/mrsluffy/platform/BlurRenderEffects {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/platform/BlurRenderEffects;
+	public final fun colorMatrix (Ldev/blurengine/mrsluffy/core/BlurConfig;)Landroid/graphics/ColorMatrix;
+	public final fun create (Ldev/blurengine/mrsluffy/core/BlurConfig;F)Landroid/graphics/RenderEffect;
+	public static synthetic fun create$default (Ldev/blurengine/mrsluffy/platform/BlurRenderEffects;Ldev/blurengine/mrsluffy/core/BlurConfig;FILjava/lang/Object;)Landroid/graphics/RenderEffect;
+	public final fun platformRadiusFor (F)F
+}
+
+public final class dev/blurengine/mrsluffy/platform/DeviceCapabilitiesDetector {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/platform/DeviceCapabilitiesDetector;
+	public final fun detect (Landroid/content/Context;)Ldev/blurengine/mrsluffy/core/DeviceCapabilities;
+}
+
+public final class dev/blurengine/mrsluffy/platform/GlassRenderEffects {
+	public static final field DISPERSION_SCALE F
+	public static final field SHADER Ljava/lang/String;
+	public fun <init> ()V
+	public final fun create (Ldev/blurengine/mrsluffy/core/GlassStyle;Landroid/graphics/RenderEffect;FFFFFFFF)Landroid/graphics/RenderEffect;
+}
+
+public final class dev/blurengine/mrsluffy/platform/GlesBlurBackend : dev/blurengine/mrsluffy/core/BlurBackend {
+	public static final field Companion Ldev/blurengine/mrsluffy/platform/GlesBlurBackend$Companion;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun getId ()Ljava/lang/String;
+	public fun initialize (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public fun release ()V
+	public fun render (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)V
+	public fun supports (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)Z
+	public fun updateConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+}
+
+public final class dev/blurengine/mrsluffy/platform/GlesBlurBackend$Companion {
+	public final fun getFactory ()Ldev/blurengine/mrsluffy/core/BlurBackendFactory;
+}
+
+public final class dev/blurengine/mrsluffy/platform/RenderEffectBackendFactory : dev/blurengine/mrsluffy/core/BlurBackendFactory {
+	public static final field ID Ljava/lang/String;
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/platform/RenderEffectBackendFactory;
+	public fun create ()Ldev/blurengine/mrsluffy/core/BlurBackend;
+	public fun getId ()Ljava/lang/String;
+	public fun isSupported (Ldev/blurengine/mrsluffy/core/BlurConfig;Ldev/blurengine/mrsluffy/core/DeviceCapabilities;)Z
+}
+
+public final class dev/blurengine/mrsluffy/platform/RenderEffectBlurBackend : dev/blurengine/mrsluffy/core/BlurBackend {
+	public static final field Companion Ldev/blurengine/mrsluffy/platform/RenderEffectBlurBackend$Companion;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun getId ()Ljava/lang/String;
+	public fun initialize (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public fun release ()V
+	public fun render (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)V
+	public fun supports (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)Z
+	public fun updateConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+}
+
+public final class dev/blurengine/mrsluffy/platform/RenderEffectBlurBackend$Companion {
+}
+
+public final class dev/blurengine/mrsluffy/platform/SoftwareBlurBackend : dev/blurengine/mrsluffy/core/BlurBackend {
+	public static final field Companion Ldev/blurengine/mrsluffy/platform/SoftwareBlurBackend$Companion;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getId ()Ljava/lang/String;
+	public fun initialize (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public fun release ()V
+	public fun render (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)V
+	public fun supports (Ldev/blurengine/mrsluffy/core/BlurInput;Ldev/blurengine/mrsluffy/core/BlurOutput;)Z
+	public fun updateConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+}
+
+public final class dev/blurengine/mrsluffy/platform/SoftwareBlurBackend$Companion {
+	public final fun getFactory ()Ldev/blurengine/mrsluffy/core/BlurBackendFactory;
+	public final fun getFastFactory ()Ldev/blurengine/mrsluffy/core/BlurBackendFactory;
+}
+

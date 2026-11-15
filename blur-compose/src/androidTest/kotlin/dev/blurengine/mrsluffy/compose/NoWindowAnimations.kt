@@ -1,0 +1,48 @@
+/*
+ * Copyright 2026 MrSluffy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dev.blurengine.mrsluffy.compose
+
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.rules.ExternalResource
+
+/**
+ * Turns off window and transition animations while tests run, so screenshots never catch an
+ * activity still animating in. Leaves animator_duration_scale alone: the blur animations under
+ * test depend on it.
+ */
+class NoWindowAnimations : ExternalResource() {
+    private val keys = listOf("window_animation_scale", "transition_animation_scale")
+    private val saved = HashMap<String, String>()
+
+    private fun shell(cmd: String): String {
+        val pfd = InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand(cmd)
+        return android.os.ParcelFileDescriptor.AutoCloseInputStream(pfd).bufferedReader().use { it.readText().trim() }
+    }
+
+    override fun before() {
+        // A notification shade left open covers the app and breaks every screenshot.
+        shell("cmd statusbar collapse")
+        for (k in keys) {
+            saved[k] = shell("settings get global $k").takeIf { it.isNotEmpty() && it != "null" } ?: "1"
+            shell("settings put global $k 0")
+        }
+    }
+
+    override fun after() {
+        for (k in keys) shell("settings put global $k ${saved[k] ?: "1"}")
+    }
+}

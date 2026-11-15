@@ -1,0 +1,26 @@
+*.iml
+.gradle/
+build/
+local.properties
+.idea/
+.kotlin/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+captures/
+.externalNativeBuild/
+.cxx/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.kiro/
+hs_err_pid*
+*.jks
+*.keystore
+RELEASING.md
+blur-library.md
+# MkDocs output
+site/

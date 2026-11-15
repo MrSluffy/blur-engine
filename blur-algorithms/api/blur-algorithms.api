@@ -1,0 +1,82 @@
+public abstract interface class dev/blurengine/mrsluffy/algorithms/BlurKernel {
+	public abstract fun blur (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;F)V
+	public abstract fun release ()V
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/BoxBlur : dev/blurengine/mrsluffy/algorithms/BlurKernel {
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun blur (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;F)V
+	public fun release ()V
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/ColorAdjust {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/algorithms/ColorAdjust;
+	public final fun apply (Ldev/blurengine/mrsluffy/core/PixelBuffer;FFIF)V
+	public final fun isNoop (FFF)Z
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/DualKawaseBlur : dev/blurengine/mrsluffy/algorithms/BlurKernel {
+	public static final field Companion Ldev/blurengine/mrsluffy/algorithms/DualKawaseBlur$Companion;
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun blur (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;F)V
+	public fun release ()V
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/DualKawaseBlur$Companion {
+	public final fun getMAX_ITERATIONS ()I
+	public final fun plan (FIII)Ldev/blurengine/mrsluffy/algorithms/KawasePlan;
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/FastGaussianBlur : dev/blurengine/mrsluffy/algorithms/BlurKernel {
+	public static final field Companion Ldev/blurengine/mrsluffy/algorithms/FastGaussianBlur$Companion;
+	public fun <init> ()V
+	public fun blur (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;F)V
+	public fun release ()V
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/FastGaussianBlur$Companion {
+	public final fun boxRadii (F[I)V
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/GaussianBlur : dev/blurengine/mrsluffy/algorithms/BlurKernel {
+	public fun <init> ()V
+	public fun <init> (F)V
+	public synthetic fun <init> (FILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun blur (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;F)V
+	public fun release ()V
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/GaussianKernel {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/algorithms/GaussianKernel;
+	public final fun weights (FF)[F
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/KawasePlan {
+	public fun <init> (IF)V
+	public final fun component1 ()I
+	public final fun component2 ()F
+	public final fun copy (IF)Ldev/blurengine/mrsluffy/algorithms/KawasePlan;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/algorithms/KawasePlan;IFILjava/lang/Object;)Ldev/blurengine/mrsluffy/algorithms/KawasePlan;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIterations ()I
+	public final fun getOffset ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/KawasePlanCache {
+	public fun <init> ()V
+	public final fun get (FIII)Ldev/blurengine/mrsluffy/algorithms/KawasePlan;
+}
+
+public final class dev/blurengine/mrsluffy/algorithms/Resampler {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/algorithms/Resampler;
+	public final fun downsample (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;I)V
+	public final fun scaledSize (II)I
+	public final fun upscale (Ldev/blurengine/mrsluffy/core/PixelBuffer;Ldev/blurengine/mrsluffy/core/PixelBuffer;II)V
+}
+

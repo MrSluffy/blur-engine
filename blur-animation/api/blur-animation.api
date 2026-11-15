@@ -1,0 +1,177 @@
+public final class dev/blurengine/mrsluffy/animation/BlurAnimation {
+	public final fun animates (Ldev/blurengine/mrsluffy/animation/BlurProperty;)Z
+	public final fun getListener ()Ldev/blurengine/mrsluffy/animation/BlurAnimationListener;
+	public final fun getSpec ()Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec;
+	public final fun target (Ldev/blurengine/mrsluffy/animation/BlurProperty;)F
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationBuilder {
+	public static final field Companion Ldev/blurengine/mrsluffy/animation/BlurAnimationBuilder$Companion;
+	public static final field DAMPING_LOW_BOUNCY F
+	public static final field DAMPING_MEDIUM_BOUNCY F
+	public static final field DAMPING_NO_BOUNCY F
+	public static final field STIFFNESS_LOW F
+	public static final field STIFFNESS_MEDIUM F
+	public fun <init> ()V
+	public final fun brightness (FF)V
+	public final fun build ()Ldev/blurengine/mrsluffy/animation/BlurAnimation;
+	public final fun getBrightness ()F
+	public final fun getDuration ()Ljava/lang/Long;
+	public final fun getInterpolator ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public final fun getOnEnd ()Ldev/blurengine/mrsluffy/animation/BlurAnimationListener;
+	public final fun getRadius ()F
+	public final fun getSaturation ()F
+	public final fun getTintAlpha ()F
+	public final fun getTintColor ()I
+	public final fun radius (FF)V
+	public final fun saturation (FF)V
+	public final fun setBrightness (F)V
+	public final fun setDuration (Ljava/lang/Long;)V
+	public final fun setInterpolator (Ldev/blurengine/mrsluffy/animation/BlurInterpolator;)V
+	public final fun setOnEnd (Ldev/blurengine/mrsluffy/animation/BlurAnimationListener;)V
+	public final fun setRadius (F)V
+	public final fun setSaturation (F)V
+	public final fun setTintAlpha (F)V
+	public final fun setTintColor (I)V
+	public final fun snap ()V
+	public final fun spring (Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun spring$default (Ldev/blurengine/mrsluffy/animation/BlurAnimationBuilder;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public final fun tintAlpha (FF)V
+	public final fun tween (JLdev/blurengine/mrsluffy/animation/BlurInterpolator;)V
+	public static synthetic fun tween$default (Ldev/blurengine/mrsluffy/animation/BlurAnimationBuilder;JLdev/blurengine/mrsluffy/animation/BlurInterpolator;ILjava/lang/Object;)V
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationBuilder$Companion {
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationBuilder$SpringBuilder {
+	public final fun getDampingRatio ()F
+	public final fun getStiffness ()F
+	public final fun setDampingRatio (F)V
+	public final fun setStiffness (F)V
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationKt {
+	public static final fun blurAnimation (Lkotlin/jvm/functions/Function1;)Ldev/blurengine/mrsluffy/animation/BlurAnimation;
+}
+
+public abstract interface class dev/blurengine/mrsluffy/animation/BlurAnimationListener {
+	public abstract fun onEnd (Z)V
+}
+
+public abstract class dev/blurengine/mrsluffy/animation/BlurAnimationSpec {
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationSpec$Snap : dev/blurengine/mrsluffy/animation/BlurAnimationSpec {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Snap;
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationSpec$Spring : dev/blurengine/mrsluffy/animation/BlurAnimationSpec {
+	public fun <init> ()V
+	public fun <init> (FF)V
+	public synthetic fun <init> (FFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun copy (FF)Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Spring;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Spring;FFILjava/lang/Object;)Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Spring;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDampingRatio ()F
+	public final fun getStiffness ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimationSpec$Tween : dev/blurengine/mrsluffy/animation/BlurAnimationSpec {
+	public fun <init> ()V
+	public fun <init> (JLdev/blurengine/mrsluffy/animation/BlurInterpolator;)V
+	public synthetic fun <init> (JLdev/blurengine/mrsluffy/animation/BlurInterpolator;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public final fun copy (JLdev/blurengine/mrsluffy/animation/BlurInterpolator;)Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Tween;
+	public static synthetic fun copy$default (Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Tween;JLdev/blurengine/mrsluffy/animation/BlurInterpolator;ILjava/lang/Object;)Ldev/blurengine/mrsluffy/animation/BlurAnimationSpec$Tween;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDurationMillis ()J
+	public final fun getInterpolator ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurAnimator {
+	public static final field IDLE I
+	public static final field MAX_STEP_SECONDS F
+	public static final field SPRING I
+	public static final field TWEEN I
+	public static final field VELOCITY_MULTIPLIER F
+	public fun <init> (Ldev/blurengine/mrsluffy/core/FrameClock;Ldev/blurengine/mrsluffy/animation/BlurValues;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Ldev/blurengine/mrsluffy/core/FrameClock;Ldev/blurengine/mrsluffy/animation/BlurValues;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun animate (Lkotlin/jvm/functions/Function1;)V
+	public final fun cancel ()V
+	public final fun end ()V
+	public final fun getValues ()Ldev/blurengine/mrsluffy/animation/BlurValues;
+	public final fun isAnimating (Ldev/blurengine/mrsluffy/animation/BlurProperty;)Z
+	public final fun isRunning ()Z
+	public final fun snap (Ldev/blurengine/mrsluffy/animation/BlurProperty;F)V
+	public final fun snapTo (Ldev/blurengine/mrsluffy/animation/BlurValues;)V
+	public final fun start (Ldev/blurengine/mrsluffy/animation/BlurAnimation;)V
+}
+
+public abstract interface class dev/blurengine/mrsluffy/animation/BlurInterpolator {
+	public abstract fun interpolate (F)F
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurInterpolators {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/animation/BlurInterpolators;
+	public final fun cubicBezier (FFFF)Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public final fun getDECELERATE ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public final fun getEASE_IN_OUT ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public final fun getFAST_OUT_SLOW_IN ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+	public final fun getLINEAR ()Ldev/blurengine/mrsluffy/animation/BlurInterpolator;
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurProperty : java/lang/Enum {
+	public static final field BRIGHTNESS Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static final field COUNT I
+	public static final field RADIUS Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static final field SATURATION Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static final field TINT_ALPHA Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static final field TINT_BLUE Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static final field TINT_COLOR_MASK I
+	public static final field TINT_GREEN Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static final field TINT_RED Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/blurengine/mrsluffy/animation/BlurProperty;
+	public static fun values ()[Ldev/blurengine/mrsluffy/animation/BlurProperty;
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurSpring {
+	public static final field INSTANCE Ldev/blurengine/mrsluffy/animation/BlurSpring;
+	public final fun step (FFFFF[F)V
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurValues {
+	public static final field Companion Ldev/blurengine/mrsluffy/animation/BlurValues$Companion;
+	public fun <init> ()V
+	public fun <init> (FIFFF)V
+	public synthetic fun <init> (FIFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun get (Ldev/blurengine/mrsluffy/animation/BlurProperty;)F
+	public final fun getBrightness ()F
+	public final fun getRadius ()F
+	public final fun getSaturation ()F
+	public final fun getTintAlpha ()F
+	public final fun getTintColor ()I
+	public final fun set (Ldev/blurengine/mrsluffy/animation/BlurProperty;F)V
+	public final fun setBrightness (F)V
+	public final fun setFrom (Ldev/blurengine/mrsluffy/animation/BlurValues;)V
+	public final fun setFrom (Ldev/blurengine/mrsluffy/core/BlurConfig;)V
+	public final fun setRadius (F)V
+	public final fun setSaturation (F)V
+	public final fun setTintAlpha (F)V
+	public final fun setTintColor (I)V
+	public final fun toConfig (Ldev/blurengine/mrsluffy/core/BlurConfig;)Ldev/blurengine/mrsluffy/core/BlurConfig;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/blurengine/mrsluffy/animation/BlurValues$Companion {
+	public final fun from (Ldev/blurengine/mrsluffy/core/BlurConfig;)Ldev/blurengine/mrsluffy/animation/BlurValues;
+}
+
