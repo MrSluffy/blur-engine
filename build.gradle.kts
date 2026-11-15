@@ -67,6 +67,18 @@ subprojects {
         // Sources jar, Dokka javadoc jar, POM from gradle.properties, signing, Central Portal upload.
         apply(plugin = "com.vanniktech.maven.publish")
         apply(plugin = "org.jetbrains.dokka")
+        // GitHub Packages, next to Maven Central: ./gradlew publishAllPublicationsToGitHubPackagesRepository
+        // Credentials come from the GitHubPackagesUsername / GitHubPackagesPassword properties
+        // (ORG_GRADLE_PROJECT_* in CI) and are only read when that task runs.
+        extensions.configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "GitHubPackages"
+                    url = uri("https://maven.pkg.github.com/MrSluffy/blur-engine")
+                    credentials(PasswordCredentials::class)
+                }
+            }
+        }
     }
 }
 
@@ -76,13 +88,15 @@ apiValidation {
     ignoredProjects += listOf("blur-samples", "blur-showcase", "benchmarks")
 }
 
-// Guard: never upload placeholder metadata to Maven Central.
+// Guard: never upload placeholder metadata to Maven Central or GitHub Packages.
 gradle.taskGraph.whenReady {
-    val uploading = allTasks.any { it.name.startsWith("publish") && it.name.contains("MavenCentral") }
+    val uploading = allTasks.any {
+        it.name.startsWith("publish") && (it.name.contains("MavenCentral") || it.name.contains("GitHubPackages"))
+    }
     if (!uploading) return@whenReady
     val placeholders = listOf("POM_LICENSE_NAME", "POM_LICENSE_URL")
         .filter { providers.gradleProperty(it).orNull.let { v -> v == null || v.startsWith("TODO") } }
     check(placeholders.isEmpty()) {
-        "Set ${placeholders.joinToString()} in gradle.properties before publishing to Maven Central."
+        "Set ${placeholders.joinToString()} in gradle.properties before publishing."
     }
 }

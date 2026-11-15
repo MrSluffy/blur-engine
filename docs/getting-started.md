@@ -30,6 +30,30 @@ dependencies {
 
 Add only `blur-view` for a View-only app; it doesn't pull in Compose. All packages are under `dev.blurengine.mrsluffy`.
 
+??? note "Installing from GitHub Packages instead"
+    Every release is also published to GitHub Packages, under the same coordinates. GitHub requires a token to download packages, even public ones: create a personal access token with the `read:packages` scope, then add the repository:
+
+    ```kotlin
+    // settings.gradle.kts
+    dependencyResolutionManagement {
+        repositories {
+            google()
+            mavenCentral()
+            maven {
+                url = uri("https://maven.pkg.github.com/MrSluffy/blur-engine")
+                credentials {
+                    username = providers.gradleProperty("gpr.user").get()
+                    password = providers.gradleProperty("gpr.key").get()
+                }
+            }
+        }
+    }
+    ```
+
+    Put `gpr.user` and `gpr.key` in `~/.gradle/gradle.properties`, never in the project. Maven Central needs none of this, so prefer it.
+
+The demo app is attached to each [GitHub Release](https://github.com/MrSluffy/blur-engine/releases) as an APK.
+
 ## Your first blur
 
 A blur surface blurs whatever is drawn **behind** it in the window. Place it on top of the content you want blurred, for example as the last child of a `FrameLayout` or `Box`.

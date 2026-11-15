@@ -1,21 +1,33 @@
 name: Publish
 
 # Runs when a release tag (v1.0.0, v1.1.0, ...) is pushed, or manually.
-# Uploads signed artifacts to the Maven Central Portal. With SONATYPE_AUTOMATIC_RELEASE=false
-# (gradle.properties) the deployment waits in the Portal until someone clicks "Publish" there.
+#
+#   verify           tag matches VERSION_NAME, license headers, ./gradlew check
+#   maven-central    signed upload to the Central Portal. With SONATYPE_AUTOMATIC_RELEASE=false
+#                    (gradle.properties) it waits there until someone clicks "Publish".
+#   github-packages  the same signed artifacts to GitHub Packages (tags only)
+#   github-release   a GitHub Release with the CHANGELOG notes and the showcase APK (tags only)
+#
+# Signing keys and Central credentials are secrets of the `maven-central` environment.
+# GitHub Packages uses the workflow's own GITHUB_TOKEN.
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false # never cancel a half-finished upload
 
 jobs:
-  publish:
+  verify:
+    name: Verify
     runs-on: ubuntu-latest
     timeout-minutes: 40
-    environment: maven-central
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -37,6 +49,27 @@ jobs:
       - name: Check Apache license headers
         run: ./gradlew spotlessCheck
       - run: ./gradlew check
+
+  maven-central:
+    name: Maven Central
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: maven-central
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
+        with:
+          cache-read-only: true
+      - run: chmod +x gradlew
       - name: Publish to Maven Central
         run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
@@ -44,3 +77,93 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+
+  # A version can only be uploaded once to GitHub Packages, so this runs for tags only.
+  github-packages:
+    name: GitHub Packages
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: maven-central # for the signing key
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
+        with:
+          cache-read-only: true
+      - run: chmod +x gradlew
+      - name: Publish to GitHub Packages
+        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_GitHubPackagesUsername: ${{ github.actor }}
+          ORG_GRADLE_PROJECT_GitHubPackagesPassword: ${{ secrets.GITHUB_TOKEN }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+
+  github-release:
+    name: GitHub Release
+    needs: [maven-central, github-packages]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write # create the release
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
+        with:
+          cache-read-only: true
+      - run: chmod +x gradlew
+      - name: Build the showcase APK
+        run: |
+          ./gradlew :blur-showcase:assembleDebug
+          cp blur-showcase/build/outputs/apk/debug/blur-showcase-debug.apk "blur-showcase-${GITHUB_REF_NAME}.apk"
+      # The section of CHANGELOG.md under "## <version>", up to the next "## " heading.
+      - name: Extract release notes
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 == "## " v { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          test -s notes.md || { echo "No '## $version' section in CHANGELOG.md"; exit 1; }
+          {
+            echo
+            echo "## Install"
+            echo
+            echo '```kotlin'
+            echo "implementation(\"io.github.mrsluffy:blur-view:$version\")     // Android Views"
+            echo "implementation(\"io.github.mrsluffy:blur-compose:$version\")  // Jetpack Compose"
+            echo '```'
+            echo
+            echo "\`blur-showcase-${GITHUB_REF_NAME}.apk\` is the demo app (a debug build; Android 10+)."
+          } >> notes.md
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=""
+          case "$GITHUB_REF_NAME" in *-*) prerelease="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file notes.md \
+            $prerelease \
+            "blur-showcase-${GITHUB_REF_NAME}.apk"
