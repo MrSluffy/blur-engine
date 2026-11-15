@@ -2,6 +2,12 @@
 
 All notable changes are listed here. Versions follow [Semantic Versioning](https://semver.org): from 1.0.0 on, breaking changes to the public API only happen in a new major version. The public API of each module is recorded in `<module>/api/*.api` and checked on every build.
 
+## Unreleased
+
+### Changed
+- **Build:** publishing plugin `com.vanniktech.maven.publish` 0.29.0 → 0.34.0. Central Portal deployments are now named `io.github.mrsluffy-<version>` instead of a random ID. The publishing properties use the plugin's current names: `mavenCentralPublishing`, `mavenCentralAutomaticPublishing` and `signAllPublications`. The published artifacts are unchanged.
+- **Releases:** only the repository owner can start the publish workflow.
+
 ## 1.0.0
 
 The first stable release. The public API is now frozen under semantic versioning.

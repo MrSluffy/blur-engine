@@ -3,13 +3,17 @@ name: Publish
 # Runs when a release tag (v1.0.0, v1.1.0, ...) is pushed, or manually.
 #
 #   verify           tag matches VERSION_NAME, license headers, ./gradlew check
-#   maven-central    signed upload to the Central Portal. With SONATYPE_AUTOMATIC_RELEASE=false
+#   maven-central    signed upload to the Central Portal. With mavenCentralAutomaticPublishing=false
 #                    (gradle.properties) it waits there until someone clicks "Publish".
 #   github-packages  the same signed artifacts to GitHub Packages (tags only)
 #   github-release   a GitHub Release with the CHANGELOG notes and the showcase APK (tags only)
 #
 # Signing keys and Central credentials are secrets of the `maven-central` environment.
 # GitHub Packages uses the workflow's own GITHUB_TOKEN.
+#
+# Only the repository owner can release: `verify` fails for anyone else. Pair it with the
+# repository settings in RELEASING.md (a tag ruleset for v* and a required reviewer on the
+# `maven-central` environment), which stop the tag and the secrets at GitHub's side as well.
 on:
   push:
     tags: ['v*']
@@ -29,6 +33,19 @@ jobs:
     permissions:
       contents: read
     steps:
+      # Every other job needs this one, so nothing is built, signed or uploaded unless the
+      # repository owner pushed the tag (or started the run) and, for re-runs, also re-ran it.
+      # A passphrase input would not help: inputs are visible to anyone who can read the run.
+      - name: Only the repository owner can release
+        env:
+          ACTOR: ${{ github.actor }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ "$ACTOR" != "$OWNER" ] || [ "$TRIGGERING_ACTOR" != "$OWNER" ]; then
+            echo "::error::Releases can only be started by $OWNER (actor: $ACTOR, triggered by: $TRIGGERING_ACTOR)."
+            exit 1
+          fi
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           persist-credentials: false
