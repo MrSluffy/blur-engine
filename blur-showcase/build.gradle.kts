@@ -29,6 +29,14 @@ android {
         versionCode = 1
         versionName = "1.0.0"
     }
+    buildTypes {
+        // The demo recordings use the release build: debuggable builds run Compose much slower,
+        // which shows up as dropped frames. Signed with the debug key so it installs anywhere;
+        // this app is never published to a store.
+        release {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
     buildFeatures { compose = true }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

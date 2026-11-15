@@ -55,7 +55,16 @@ Results from **physical devices** are the most useful contribution right now: th
 .\scripts\record-demo.ps1 -SkipBuild -Seconds 12 -Screens glass
 ```
 
-It needs `adb` (through `ANDROID_HOME` or the default SDK location) and `ffmpeg` on `PATH` (or `-Ffmpeg <path>`). It turns on System UI demo mode (9:41 clock, full battery, no notifications), launches each screen with `--ez autoplay true` so the app plays scripted motion, records at half resolution, converts each clip to a GIF with a two-pass palette, and turns demo mode off again.
+It needs `adb` (through `ANDROID_HOME` or the default SDK location) and `ffmpeg` on `PATH` (or `-Ffmpeg <path>`). It:
+
+- installs the **release** build of `blur-showcase` (debuggable builds run Compose much slower and drop frames on camera);
+- halves the display size and density while recording (`-Scale`), sets the animator scale to 1, and turns on System UI demo mode (9:41 clock, full battery, no notifications);
+- launches each screen with `--ez autoplay true` so the app plays scripted motion;
+- records **from the host** on an emulator (`adb emu screenrecord`). `screenrecord` inside the emulator encodes in software and kept only 6 to 10 frames per second; on a physical device the script uses `screenrecord`;
+- trims each clip to exactly one cycle of the screen's motion, so the GIF loops seamlessly, and converts it at 25 fps (exactly 4/100 s per GIF frame), 320 px wide, with a dithered two-pass palette;
+- prints how many distinct frames per second each clip got, and restores the display, animator scale and status bar.
+
+Use an emulator with a hardware GPU; with software GL the app itself can't keep up.
 
 To open a screen by hand: `adb shell am start -n dev.blurengine.mrsluffy.showcase/.ShowcaseActivity --es screen layers --ez autoplay true` (screens: `glass`, `gradient`, `layers`, `motion`).
 
