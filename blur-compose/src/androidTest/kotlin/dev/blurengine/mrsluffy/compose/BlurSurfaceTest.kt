@@ -51,6 +51,45 @@ import kotlin.math.abs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+/** How long to wait for a backend to warm up; software GL on CI emulators needs seconds. */
+private const val WARM_UP_TIMEOUT_MS = 30_000L
+
+/**
+ * Takes screenshots until two in a row match (within 4 per channel, on a sparse grid) and returns
+ * the last, so nothing still changing on screen, such as a starting window fading out after
+ * launch on API 31+, ends up in the pixels a test checks.
+ */
+private fun stableScreenshot(timeoutMs: Long = 10_000): Bitmap {
+    val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+    val deadline = SystemClock.uptimeMillis() + timeoutMs
+    var previous = assertNotNull(automation.takeScreenshot())
+    while (true) {
+        SystemClock.sleep(150)
+        val current = assertNotNull(automation.takeScreenshot())
+        val stable = sameOnGrid(previous, current)
+        previous.recycle() // full-screen screenshots are large; don't leave them to the GC
+        if (stable || SystemClock.uptimeMillis() >= deadline) return current
+        previous = current
+    }
+}
+
+private fun sameOnGrid(a: Bitmap, b: Bitmap, tolerance: Int = 4): Boolean {
+    if (a.width != b.width || a.height != b.height) return false
+    for (y in 12 until a.height step 24) {
+        for (x in 12 until a.width step 24) {
+            val p = a.getPixel(x, y)
+            val q = b.getPixel(x, y)
+            if (abs(android.graphics.Color.red(p) - android.graphics.Color.red(q)) > tolerance ||
+                abs(android.graphics.Color.green(p) - android.graphics.Color.green(q)) > tolerance ||
+                abs(android.graphics.Color.blue(p) - android.graphics.Color.blue(q)) > tolerance
+            ) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
 @RunWith(AndroidJUnit4::class)
 class BlurSurfaceTest {
     // Order 0: animations must be off before the compose rule launches its activity.
@@ -97,8 +136,7 @@ class BlurSurfaceTest {
 
     private fun screenshot(): Bitmap {
         rule.waitForIdle()
-        SystemClock.sleep(300)
-        val shot = assertNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot())
+        val shot = stableScreenshot()
         // Keep the latest screenshot on the device for debugging failures (adb pull).
         InstrumentationRegistry.getInstrumentation().targetContext.getExternalFilesDir(null)?.let { dir ->
             java.io.File(dir, "last.png").outputStream().use { shot.compress(Bitmap.CompressFormat.PNG, 100, it) }
@@ -109,9 +147,12 @@ class BlurSurfaceTest {
 
     private fun isMixed(p: Int) = android.graphics.Color.red(p) in 40..215 && android.graphics.Color.blue(p) in 40..215
 
-    /** Backends warm up in the background, so allow a moment for the first blurred frame. */
+    /**
+     * Backends warm up in the background, so allow time for the first blurred frame. Software GL
+     * (SwiftShader on CI emulators) can take several seconds per backend.
+     */
     private fun awaitBlurred(): Bitmap {
-        val deadline = SystemClock.uptimeMillis() + 5000
+        val deadline = SystemClock.uptimeMillis() + WARM_UP_TIMEOUT_MS
         var shot = screenshot()
         while (!isMixed(shot.getPixel(geometry.boundary, geometry.midY)) && SystemClock.uptimeMillis() < deadline) {
             SystemClock.sleep(200)
@@ -202,7 +243,7 @@ class BlurSurfaceTest {
 
     /** Like awaitBlurred, but waits for the pixel [probe] picks to be mixed. */
     private fun awaitBlurredAt(probe: (Bitmap) -> Int): Bitmap {
-        val deadline = SystemClock.uptimeMillis() + 5000
+        val deadline = SystemClock.uptimeMillis() + WARM_UP_TIMEOUT_MS
         var shot = screenshot()
         while (!isMixed(probe(shot)) && SystemClock.uptimeMillis() < deadline) {
             SystemClock.sleep(200)

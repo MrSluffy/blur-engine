@@ -62,8 +62,7 @@ class BlurEffectsTest {
     private fun screenshot(name: String): Bitmap {
         awaitRendered(instrumentation)
         awaitFrames()
-        SystemClock.sleep(300)
-        val shot = assertNotNull(instrumentation.uiAutomation.takeScreenshot())
+        val shot = stableScreenshot(instrumentation)
         instrumentation.targetContext.getExternalFilesDir(null)?.let { dir ->
             java.io.File(dir, "$name.png").outputStream().use { shot.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }

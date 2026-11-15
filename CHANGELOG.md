@@ -4,6 +4,13 @@ All notable changes are listed here. Versions follow [Semantic Versioning](https
 
 ## Unreleased
 
+### Fixed
+- **`BlurSurfaceRenderer.skippedCapture`** was also `true` while a backend was still warming up. It now means only what it says: capture was skipped because the blur was a no-op.
+- **Device tests on CI emulators** (software GL):
+  - tests now wait until the blur is drawn by its final renderer instead of a fixed delay;
+  - they pin the animation scale to 1 while they run;
+  - they take screenshots only once the screen has stopped changing.
+
 ### Changed
 - **Build:** publishing plugin `com.vanniktech.maven.publish` 0.29.0 → 0.34.0. Central Portal deployments are now named `io.github.mrsluffy-<version>` instead of a random ID. The publishing properties use the plugin's current names: `mavenCentralPublishing`, `mavenCentralAutomaticPublishing` and `signAllPublications`. The published artifacts are unchanged.
 - **Releases:** only the repository owner can start the publish workflow.

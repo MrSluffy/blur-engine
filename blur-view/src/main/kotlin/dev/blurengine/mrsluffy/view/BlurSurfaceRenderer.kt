@@ -113,13 +113,28 @@ public class BlurSurfaceRenderer(
     public var lastUpdateMillis: Float = 0f
         private set
 
-    /** True when the last update skipped capture because the blur was a no-op. */
-    public val skippedCapture: Boolean get() = tintOnly
+    /**
+     * True when the last update skipped capture because the blur was a no-op. Not set while a
+     * backend is still warming up: then the tint is drawn alone, but capture wasn't skipped by choice.
+     */
+    public val skippedCapture: Boolean get() = skippedAsNoOp
 
     public val isAttached: Boolean get() = observer != null
 
     /** True when the render path for [config] can draw right away, with no backend still warming up. */
     internal val isReady: Boolean get() = useRenderEffect(config) || (backend != null && !warming)
+
+    /**
+     * True when the last frame shows [config] the way it will stay: drawn by the path [config]
+     * calls for, or skipped because [config] is a no-op. False while a backend warms up, and in
+     * the frame after the path changed. Tests wait on this instead of sleeping.
+     */
+    internal val isSettled: Boolean
+        get() {
+            if (isNoOp(config)) return skippedAsNoOp
+            if (!isReady || !hasContent) return false
+            return activePath == if (useRenderEffect(config)) PATH_RENDER_EFFECT else backend?.id
+        }
 
     /** True when the last frame applied glass refraction (API 33+ and a style with refraction). */
     internal val refractionActive: Boolean get() = refracting
@@ -148,6 +163,9 @@ public class BlurSurfaceRenderer(
     private var lastFrame = Long.MIN_VALUE
     private var hasContent = false
     private var tintOnly = false
+
+    /** The last update skipped capture because [config] was a no-op (see [isNoOp]). */
+    private var skippedAsNoOp = false
     private var refracting = false
     private var contentWidth = 0
     private var contentHeight = 0
@@ -322,17 +340,15 @@ public class BlurSurfaceRenderer(
         val start = SystemClock.elapsedRealtimeNanos()
         val c = config
         refracting = false
-        // Nothing to blur or recolor: the content behind already looks right, so skip the
-        // capture and draw only the tint. Covers the end of hide(), progress 0, and a gradient
-        // that is zero everywhere.
-        val nothingToBlur = c.radius < 0.5f && c.saturation == 1f && c.brightness == 1f
-        if (nothingToBlur || c.gradient?.isInvisible == true) {
+        if (isNoOp(c)) {
             hasContent = false
             tintOnly = true
+            skippedAsNoOp = true
             lastUpdateMillis = (SystemClock.elapsedRealtimeNanos() - start) / 1_000_000f
             return
         }
         tintOnly = false
+        skippedAsNoOp = false
         val src = source ?: host.rootView
         // 3 sigma of margin (sigma = radius / 2) so the blur near the edges sees real content.
         // Glass refraction samples inward, so it needs no extra. Rounded up to MARGIN_STEP so an
@@ -443,11 +459,20 @@ public class BlurSurfaceRenderer(
         captureImage = null
         blurredImage = null
         hasContent = false
+        skippedAsNoOp = false
         refracting = false
         activePath = null
         effectDirty = true
         effectW = -1
     }
+
+    /**
+     * Nothing to blur or recolor: the content behind already looks right, so capture is skipped
+     * and only the tint is drawn. Covers the end of hide(), progress 0, and a gradient that is
+     * zero everywhere.
+     */
+    private fun isNoOp(c: BlurConfig): Boolean =
+        (c.radius < 0.5f && c.saturation == 1f && c.brightness == 1f) || c.gradient?.isInvisible == true
 
     private fun useRenderEffect(c: BlurConfig): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && host.isHardwareAccelerated &&

@@ -118,8 +118,7 @@ class BlurViewRobustnessTest {
 
     private fun screenshot(): Bitmap {
         instrumentation.waitForIdleSync()
-        SystemClock.sleep(600)
-        return assertNotNull(instrumentation.uiAutomation.takeScreenshot())
+        return stableScreenshot(instrumentation)
     }
 
     private fun mixed(p: Int) = Color.red(p) in 40..215 && Color.blue(p) in 40..215
@@ -127,14 +126,12 @@ class BlurViewRobustnessTest {
     /** Image loaders (Coil, Glide) use HARDWARE bitmaps; software drawing alone throws on them. */
     @Test fun hardwareBitmapsBehindTheViewAreBlurred() {
         ActivityScenario.launch(HardwareBitmapActivity::class.java).use { s ->
+            var view: BlurView? = null
+            s.onActivity { view = it.blurView }
+            val settled = awaitOnMain(instrumentation) { view!!.isSettled.also { if (!it) view!!.invalidate() } }
             var renderer: String? = null
-            val deadline = SystemClock.uptimeMillis() + 5000
-            while (renderer == null && SystemClock.uptimeMillis() < deadline) {
-                instrumentation.waitForIdleSync()
-                s.onActivity { renderer = it.blurView.activeRenderer }
-                if (renderer == null) SystemClock.sleep(100)
-            }
-            assertNotNull(renderer, "capture never succeeded")
+            s.onActivity { renderer = it.blurView.activeRenderer }
+            assertTrue(settled, "capture never succeeded (renderer=$renderer)")
             val shot = screenshot()
             var cx = 0; var cy = 0
             s.onActivity {
@@ -184,15 +181,16 @@ class BlurViewRobustnessTest {
 
     @Test fun severalBlurViewsAllRender() {
         ActivityScenario.launch(MultiBlurActivity::class.java).use { s ->
-            val deadline = SystemClock.uptimeMillis() + 5000
-            var renderers: List<String?> = emptyList()
-            while (SystemClock.uptimeMillis() < deadline) {
-                instrumentation.waitForIdleSync()
-                s.onActivity { a -> renderers = a.blurViews.map { it.activeRenderer } }
-                if (renderers.none { it == null }) break
-                SystemClock.sleep(100)
+            var views: List<BlurView> = emptyList()
+            s.onActivity { a -> views = a.blurViews.toList() }
+            // Four backends warm up one after another on the shared background thread.
+            val all = awaitOnMain(instrumentation) {
+                views.forEach { if (!it.isSettled) it.invalidate() }
+                views.all { it.isSettled }
             }
-            assertTrue(renderers.size == 4 && renderers.none { it == null }, "not all rendered: $renderers")
+            var renderers: List<String?> = emptyList()
+            s.onActivity { renderers = views.map { it.activeRenderer } }
+            assertTrue(views.size == 4 && all && renderers.none { it == null }, "not all rendered: $renderers")
         }
     }
 

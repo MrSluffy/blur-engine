@@ -44,8 +44,7 @@ class BlurViewAnimationTest {
 
     private fun screenshot(): Bitmap {
         awaitRendered(instrumentation)
-        SystemClock.sleep(400)
-        return assertNotNull(instrumentation.uiAutomation.takeScreenshot())
+        return stableScreenshot(instrumentation)
     }
 
     /** Boundary pixel inside the BlurView: mixed when blurred, pure red or blue when sharp. */
@@ -85,12 +84,7 @@ class BlurViewAnimationTest {
             screenshot()
             // Like an app whose BlurView has been on screen a moment: the backend has finished
             // warming up before the animation starts. Changing the algorithm just now restarts it.
-            val ready = SystemClock.uptimeMillis() + 5000
-            var isReady = false
-            while (!isReady && SystemClock.uptimeMillis() < ready) {
-                s.onActivity { a -> isReady = a.blurView.isRendererReady }
-                if (!isReady) SystemClock.sleep(50)
-            }
+            val isReady = awaitOnMain(instrumentation) { BlurTestActivity.current?.blurView?.isRendererReady == true }
             assertTrue(isReady, "backend never became ready")
             s.onActivity {
                 recorder = Recorder(it.blurView)

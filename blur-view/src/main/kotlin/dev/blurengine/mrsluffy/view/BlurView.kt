@@ -194,6 +194,9 @@ public open class BlurView @JvmOverloads constructor(
     /** Diagnostic for tests: the render path for the current config needs no more warm-up. */
     internal val isRendererReady: Boolean get() = controller.isReady
 
+    /** Diagnostic for tests: the last frame shows the current config with its final render path. */
+    internal val isSettled: Boolean get() = controller.isSettled
+
     /** Diagnostic for tests: the last frame applied glass refraction (API 33+). */
     internal val isRefracting: Boolean get() = controller.refractionActive
 

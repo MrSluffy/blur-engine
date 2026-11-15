@@ -40,22 +40,82 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * Waits until the test activity's BlurView has drawn with a renderer (backends warm up in the
- * background) or skipped capture because nothing needs blurring.
+ * How long to wait for a backend to warm up. A GPU does it in well under a second; software GL
+ * (SwiftShader on CI emulators) can take several seconds per backend, and warm-ups queue on one
+ * background thread.
  */
-fun awaitRendered(instrumentation: android.app.Instrumentation, timeoutMs: Long = 5000) {
+const val SETTLE_TIMEOUT_MS = 30_000L
+
+/** Polls [condition] on the main thread until it holds or [timeoutMs] passes; returns the last result. */
+fun awaitOnMain(
+    instrumentation: android.app.Instrumentation,
+    timeoutMs: Long = SETTLE_TIMEOUT_MS,
+    condition: () -> Boolean,
+): Boolean {
     val deadline = SystemClock.uptimeMillis() + timeoutMs
-    while (SystemClock.uptimeMillis() < deadline) {
+    while (true) {
         instrumentation.waitForIdleSync()
-        var ready = false
-        instrumentation.runOnMainSync {
-            val activity = BlurTestActivity.current ?: return@runOnMainSync
-            val v = activity.blurView
-            ready = !v.isShown || v.skippedCapture || v.activeRenderer != null
-        }
-        if (ready) return
+        var met = false
+        instrumentation.runOnMainSync { met = condition() }
+        if (met || SystemClock.uptimeMillis() >= deadline) return met
         SystemClock.sleep(50)
     }
+}
+
+/**
+ * Waits until the test activity's BlurView shows its current config with its final render path:
+ * any backend warm-up is done and a frame was drawn with it, or the config is a no-op.
+ * Fails if that doesn't happen in time, rather than letting a screenshot catch a half-ready view.
+ */
+fun awaitRendered(instrumentation: android.app.Instrumentation, timeoutMs: Long = SETTLE_TIMEOUT_MS) {
+    var state = ""
+    val settled = awaitOnMain(instrumentation, timeoutMs) {
+        val v = BlurTestActivity.current?.blurView ?: return@awaitOnMain false
+        state = "renderer=${v.activeRenderer} ready=${v.isRendererReady} shown=${v.isShown}"
+        // Ask for a frame each time: the frame after warm-up is what switches the path.
+        if (!v.isSettled) v.invalidate()
+        !v.isShown || v.isSettled
+    }
+    assertTrue(settled, "BlurView did not settle within $timeoutMs ms ($state)")
+}
+
+/**
+ * Takes screenshots until two in a row match (within [tolerance] per channel, on a sparse grid),
+ * and returns the last. Anything still changing on screen, such as a starting window fading out
+ * after launch on API 31+, would otherwise end up in the pixels a test checks.
+ */
+fun stableScreenshot(
+    instrumentation: android.app.Instrumentation,
+    timeoutMs: Long = 10_000,
+    tolerance: Int = 4,
+): Bitmap {
+    val deadline = SystemClock.uptimeMillis() + timeoutMs
+    var previous = assertNotNull(instrumentation.uiAutomation.takeScreenshot())
+    while (true) {
+        SystemClock.sleep(150)
+        val current = assertNotNull(instrumentation.uiAutomation.takeScreenshot())
+        val stable = sameOnGrid(previous, current, tolerance)
+        previous.recycle() // full-screen screenshots are large; don't leave them to the GC
+        if (stable || SystemClock.uptimeMillis() >= deadline) return current
+        previous = current
+    }
+}
+
+private fun sameOnGrid(a: Bitmap, b: Bitmap, tolerance: Int): Boolean {
+    if (a.width != b.width || a.height != b.height) return false
+    val step = 24
+    for (y in step / 2 until a.height step step) {
+        for (x in step / 2 until a.width step step) {
+            val p = a.getPixel(x, y)
+            val q = b.getPixel(x, y)
+            if (abs(Color.red(p) - Color.red(q)) > tolerance || abs(Color.green(p) - Color.green(q)) > tolerance ||
+                abs(Color.blue(p) - Color.blue(q)) > tolerance
+            ) {
+                return false
+            }
+        }
+    }
+    return true
 }
 
 /**
@@ -108,8 +168,7 @@ class BlurViewScreenTest {
 
     private fun screenshot(): Bitmap {
         awaitRendered(instrumentation)
-        SystemClock.sleep(400) // let a few frames reach the screen
-        return assertNotNull(instrumentation.uiAutomation.takeScreenshot())
+        return stableScreenshot(instrumentation)
     }
 
     private fun red(c: Int) = Color.red(c)
