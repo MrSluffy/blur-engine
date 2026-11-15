@@ -1,0 +1,64 @@
+# Dependabot version updates. Each update is a pull request against the default branch, and
+# ci.yml (plus pages.yml for the docs) runs on it like on any other pull request.
+# Security updates are separate: turn on "Dependabot security updates" under
+# Settings → Code security, and they use this file's settings too.
+version: 2
+
+updates:
+  # Gradle: plugins and libraries in gradle/libs.versions.toml.
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    labels: [dependencies, gradle]
+    commit-message:
+      prefix: "deps"
+    groups:
+      # Kotlin, its Compose compiler plugin and AGP have to move together.
+      kotlin-and-agp:
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "com.android.*"
+      compose:
+        patterns:
+          - "androidx.compose*"
+          - "androidx.activity*"
+      androidx-test:
+        patterns:
+          - "androidx.test*"
+          - "androidx.benchmark*"
+          - "junit:junit"
+      build-tooling:
+        patterns:
+          - "com.vanniktech*"
+          - "org.jetbrains.dokka*"
+          - "org.jetbrains.kotlinx.binary-compatibility-validator*"
+          - "com.diffplug.spotless*"
+
+  # GitHub Actions. The workflows pin actions to commit SHAs; Dependabot updates the SHA and the
+  # version comment next to it.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels: [dependencies, github-actions]
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # MkDocs for the documentation site (mkdocs-requirements.txt).
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies, docs]
+    commit-message:
+      prefix: "docs"
+    groups:
+      mkdocs:
+        patterns: ["*"]

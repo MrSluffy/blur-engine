@@ -1,6 +1,8 @@
 # Contributing
 
-Bug reports, device measurements and pull requests are welcome. For a larger change, open an issue first so we can agree on the approach.
+Bug reports, device measurements and pull requests are welcome. For a larger change, open an issue first so we can agree on the approach. Report security problems privately, as described in the [security policy](https://github.com/MrSluffy/blur-engine/blob/HEAD/SECURITY.md), not in an issue.
+
+Dependency updates arrive as Dependabot pull requests (configured in `.github/dependabot.yml`), and CI tests them like any other pull request. Kotlin and AGP updates can change the recorded public API: if `apiCheck` fails on one, review the diff before running `apiDump`.
 
 ## Building
 
